@@ -13,5 +13,8 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\PostController@home');
-Route::get('/search',[PostController::class,'search'])->name('web.search');
+Route::get('{any}', function () {
+    return view('home');
+})->where('any', '.*');
+// Route::get('/home', [PostController::class,'home']);
+// Route::get('/search',[PostController::class,'search'])->name('web.search');

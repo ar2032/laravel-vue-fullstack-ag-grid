@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
 use App\Models\Post;
 
@@ -10,8 +10,9 @@ class PostController extends Controller
     
     public function home() {
         $posts = Post::paginate(4);
-
-        return view('home', compact('posts'));
+        
+        return response()->json($posts);
+        
     }
     public function search(Request $request){
         
@@ -27,6 +28,8 @@ class PostController extends Controller
         }
     }
 }
-
+// return new PostResource(Post::paginate(4));
+// view('home', compact('posts'))
+// ['posts' => $posts->toArray()]
 //whereRaw(array('$text'=>array('$search'=> $search_text)))->get();;
 // ['searchs'=>$searchs]
