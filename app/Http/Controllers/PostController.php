@@ -19,9 +19,9 @@ class PostController extends Controller
         if(isset($_GET['query']) && isset($_GET['parame'])){
             $search_text=$_GET['query'];
             $col_text=$_GET['parame'];
-            $searchs=Post::where("$col_text",'LIKE','%'.$search_text.'%')->paginate(4);
-            $searchs->appends($request->all());
-            return view('search',compact('searchs'));
+            $searchs=Post::where("$col_text",'LIKE','%'.$search_text.'%')->get();
+            // $searchs->appends($request->all());
+            return response()->json($searchs);
         }
         else{
             return view('search',['searchs' =>[] ]);
@@ -31,5 +31,7 @@ class PostController extends Controller
 // return new PostResource(Post::paginate(4));
 // view('home', compact('posts'))
 // ['posts' => $posts->toArray()]
-//whereRaw(array('$text'=>array('$search'=> $search_text)))->get();;
+//whereRaw(array('$text'=>array('$search'=> $search_text)))->get()
 // ['searchs'=>$searchs]
+// 
+//
