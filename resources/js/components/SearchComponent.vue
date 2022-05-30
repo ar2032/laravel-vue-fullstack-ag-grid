@@ -46,7 +46,7 @@
             <td>UPDATED_DATE</td>
             <td>SOURCE</td>
         </tr>
-    <ul v-if="post.length > 0">
+    
          <tr v-for="search in post" :key="search._id">
             <td>{{ search.STATUS }}</td>
             <td>{{ search.DDC_CODE }}</td>
@@ -63,7 +63,7 @@
             <td>{{ search.UPDATED_DATE }}</td>
             <td>{{ search.SOURCE }}</td>
             </tr>  
-    </ul>
+   
     </table>
     </div> 
 </template>
@@ -76,14 +76,6 @@ export default {
             post:[],
             query:null,
             parame:null
-        }
-    },
-     watch:{
-        query(after, before){
-            this.getResults();
-        },
-        parame(after, before){
-            this.getResults();
         }
     },
     methods:{
