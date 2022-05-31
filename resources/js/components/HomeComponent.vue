@@ -1,85 +1,66 @@
 <template>
-<div class="container">
-<div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Home component</div>
-                   
-                        <table border = "1">
-                        <tr>
-                        
-                        <td scope="col">STATUS</td>
-                        <td scope="col">DDC_CODE</td>
-                        <td scope="col">TRADE_NAME</td>
-                        <td scope="col">SCIENTIFIC_CODE</td>
-                        <td scope="col">SCIENTIFIC_NAME</td>
-                        <td scope="col">INGREDIENT_STRENGTH</td>
-                        <td scope="col">DOSAGE_FORM_PACKAGE</td>
-                        <td scope="col">ROUTE_OF_ADMIN</td>
-                        <td scope="col">PACKAGE_PRICE</td>
-                        <td scope="col">GRANULAR_UNIT</td>
-                        <td scope="col">MANUFACTURER</td>
-                        <td scope="col">REGISTERED_OWNER</td>
-                        <td scope="col">UPDATED_DATE</td>
-                        <td scope="col">SOURCE</td>
-                        
-                        </tr>
-                        <tr v-for="post in laravelData.data" :key="post._id">
-                            
-                            
-                            <td>{{ post.STATUS }}</td>
-                            <td>{{ post.DDC_CODE }}</td>
-                            <td>{{ post.TRADE_NAME }}</td>
-                            <td>{{ post.SCIENTIFIC_CODE }}</td>
-                            <td>{{ post.SCIENTIFIC_NAME }}</td>
-                            <td>{{ post.INGREDIENT_STRENGTH }}</td>
-                            <td>{{ post.DOSAGE_FORM_PACKAGE }}</td>
-                            <td>{{ post.ROUTE_OF_ADMIN }}</td>
-                            <td>{{ post.PACKAGE_PRICE }}</td>
-                            <td>{{ post.GRANULAR_UNIT }}</td>
-                            <td>{{ post.MANUFACTURER }}</td>
-                            <td>{{ post.REGISTERED_OWNER }}</td>
-                            <td>{{ post.UPDATED_DATE }}</td>
-                            <td>{{ post.SOURCE }}</td>
-                           
-                            
-                        </tr>
-                        </table>
-                    
-
-                    <Pagination :data="laravelData" @pagination-change-page="getResults" />
-                </div>
-            </div>
-        </div>
-</div>
+<ag-grid-vue
+    style="width: 1000px; height: 550px"
+    class="ag-theme-alpine"
+    :pagination="pagination"
+    :paginationPageSize="paginationPageSize"
+    :sideBar="sideBar"
+    :autoGroupColumnDef="autoGroupColumnDef"
+    :columnDefs="columnDefs"
+    :rowData="rowData"
+  >
+  </ag-grid-vue>
 </template>
 
 <script>
-import LaravelVuePagination from 'shetabit-laravel-vue-pagination';
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import { AgGridVue } from "ag-grid-vue";
+import axios from 'axios';
+import 'ag-grid-enterprise';
 
  export default{
   components: {
-            'Pagination': LaravelVuePagination
+    AgGridVue
   },
   data() {
     return {
-        laravelData: {}
+      columnDefs: null,
+      rowData: null,
+      pagination:true,
+      paginationPageSize: 10,
     };
  },
+ created() {
+    this.autoGroupColumnDef = {
+      minWidth: 250,
+    };
+    this.sideBar = 'columns';
+  },
  
     mounted(){
-    this.getResults();
-    },
-    methods:{
-            getResults(page = 1) {
-                axios.get('api/home?page=' + page)
-                    .then(response => {
-                        this.laravelData = response.data;
-                    });
-            }
+    this.columnDefs = [
+      
+      { field: "STATUS",filter: true,rowGroup: true,enableRowGroup: true },
+      { field: "DDC_CODE"},
+      { field: "TRADE_NAME"},
+      { field: "SCIENTIFIC_CODE"},
+      { field: "SCIENTIFIC_NAME"},
+      { field: "INGREDIENT_STRENGTH"},
+      { field: "DOSAGE_FORM_PACKAGE"},
+      { field: "ROUTE_OF_ADMIN",rowGroup: true,enableRowGroup: true,enablePivot: true},
+      { field: "PACKAGE_PRICE",aggFunc: 'sum'},
+      { field: "GRANULAR_UNIT",aggFunc: 'sum'},
+      { field: "MANUFACTURER"},
+      { field: "REGISTERED_OWNER"},
+      { field: "UPDATED_DATE",},
+      { field: "SOURCE",rowGroup: true,enableRowGroup: true},
 
+    ];
+    axios.get('/api/home')
+    .then(response=>this.rowData=response.data.data)
     },
-
+    
 }
  </script>
 
